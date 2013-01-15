@@ -1,6 +1,6 @@
 = idol-search
 
-lightweight dsl for Autonomy Idol search
+lightweight library for Autonomy Idol search
 
 == Contributing to idol-search
  

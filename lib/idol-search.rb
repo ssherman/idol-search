@@ -38,32 +38,33 @@ module Idol
     TERM_PHRASE = "TERMPHRASE"
   end
 
-  class Query
-    attr_accessor :url, :text, :filters, :parameters, :raw_results, :sort
-    attr_reader :action
-    
-    OPTIONAL_PARAMETERS = %w(abridged abs_weight agent_boolean_field agent_params_field agent_security_field any_language auto_phrase case_sensitive characters cluster combine combine_number dah_end_state dah_start_state database_match delete detect_language_type dont_match_id dont_match_reference encrypt_response end_tag field_check field_recurse field_restriction field_text_field filename force_template_refresh hard_field_restriction highlight highlight_tag_term ignore_specials irs language_type match_all_terms match_encoding match_id match_language match_language_type match_reference max_date max_id max_links_per_term max_print_chars max_query_terms max_results max_score min_date min_id min_links min_score min_term_length multi_stage multi_stage_info multi_stage_min_results multi_stage_page_backward multi_stage_start_state multi_stage_total_stages output output_encoding predict print print_fields query_summary reference_field security_info sentences single_match sort spellcheck start start_tag state_dont_match_id state_match_id stemming store_state stored_state_detail stored_state_field summary synonym template template_params_csvs text_parse vql weight_field_text xml_meta)
-
-    OPTIONAL_PARAMETERS.each do |opt_param|
-      define_method :"#{opt_param}" do |value|
-        instance_variable_set("@#{opt_param}", value)
-        @parameters[opt_param.gsub("_", "")] = value
-        return self
+  module OptionalParams
+    def has_optional_params(*params)
+      params.flatten.each do |opt_param|
+        define_method :"#{opt_param}" do |value|
+          instance_variable_set("@#{opt_param}", value)
+          @parameters[opt_param.gsub("_", "")] = value
+          return self
+        end
       end
     end
 
-    def initialize(url, text, parameters = {})
+  end
+
+  module BasicIdolFunctionality
+    attr_accessor :url, :filters, :parameters, :raw_results
+    attr_reader :action
+
+    def initialize(url, parameters = {})
       @raw_results = false
       @url = url
-      @action = "Query"
-      @text = text
       @parameters = parameters
       @filters = FieldTextFilterCollection.new
     end
 
     def filters
       @filters
-    end
+    end    
 
     def execute
       post_fields = generate_post_fields
@@ -71,9 +72,8 @@ module Idol
       status = nil
       body = nil
 
-      full_url = "#{@url}/?action=#{@action}"
       request = Curl::Easy.new do |r|
-        r.url = "#{@url}/?action=Query"
+        r.url = "#{@url}/?action=#{@action}"
         r.on_complete do |data|
           status = data.response_code
           body = data.body_str
@@ -81,7 +81,6 @@ module Idol
       end
 
       request.http_post(*post_fields)
-      #[status, body]
       results = @raw_results ? body : Hash.from_xml(body)
       if !@raw_results && results[:autnresponse][:responsedata][:abridged] 
         # TODO: parse the abridged results
@@ -95,14 +94,36 @@ module Idol
       if @filters.count > 0
         post_fields << Curl::PostField.content("fieldtext", @filters.to_idol_syntax)
       end
-      post_fields << Curl::PostField.content("text", @text)
 
+      puts "@params: #{@parameters.inspect}"
       @parameters.each do |name, values|
         post_fields << Curl::PostField.content(name, values)
       end
       post_fields
     end
+  end
 
+  class Query
+    extend OptionalParams
+    include BasicIdolFunctionality
+    OPTIONAL_PARAMETERS = %w(text abridged abs_weight agent_boolean_field agent_params_field agent_security_field any_language auto_phrase case_sensitive characters cluster combine combine_number dah_end_state dah_start_state database_match delete detect_language_type dont_match_id dont_match_reference encrypt_response end_tag field_check field_recurse field_restriction field_text_field filename force_template_refresh hard_field_restriction highlight highlight_tag_term ignore_specials irs language_type match_all_terms match_encoding match_id match_language match_language_type match_reference max_date max_id max_links_per_term max_print_chars max_query_terms max_results max_score min_date min_id min_links min_score min_term_length multi_stage multi_stage_info multi_stage_min_results multi_stage_page_backward multi_stage_start_state multi_stage_total_stages output output_encoding predict print print_fields query_summary reference_field security_info sentences single_match sort spellcheck start start_tag state_dont_match_id state_match_id stemming store_state stored_state_detail stored_state_field summary synonym template template_params_csvs text_parse vql weight_field_text xml_meta)  unless defined? OPTIONAL_PARAMETERS
+    has_optional_params OPTIONAL_PARAMETERS
+    def initialize(url, parameters = {})
+      super
+      @action = "Query"
+    end
+
+  end
+
+  class Suggest
+    extend OptionalParams
+    include BasicIdolFunctionality
+    OPTIONAL_PARAMETERS = %w(abs_weight case_sensitive characters cluster combine combine_number dah_end_state dah_start_state database_match delete dont_match_id dont_match_reference encrypt_response end_tag field_check field_recurse file_name force_template_refresh highlight highlight_tag_term id irs language_type match_encoding match_id match_language match_language_type match_reference max_date max_id max_print_chars max_results max_score min_date min_id min_links min_score min_term_length output output_encoding predict print print_fields query_summary reference reference_field security_info sentences single_match sort start start_tag state_dont_match_id state_id state_match_id stemming store_state stored_state_field summary template template_params_csvs timeout_ms total_results weigh_field_text xml_meta)
+    has_optional_params OPTIONAL_PARAMETERS
+    def initialize(url, parameters = {})
+      super
+      @action = "Suggest"
+    end
   end
 
   class FieldTextFilter
