@@ -42,12 +42,10 @@ module Idol
     def has_optional_params(*params)
       params.flatten.each do |opt_param|
 
-        # reader
-        define_method("#{opt_param}") { @parameters[opt_param] }
-
         # write the value to params
         define_method :"#{opt_param}" do |value|
           instance_variable_set("@#{opt_param}", value)
+          self.class.send(:attr_accessor, opt_param)
           @parameters[opt_param.gsub("_", "")] = value
           return self
         end
