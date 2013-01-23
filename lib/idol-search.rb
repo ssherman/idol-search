@@ -53,7 +53,7 @@ module Idol
 
       request.http_post(*post_fields)
       return body if @raw_results
-      results = if abridged
+      results = if @parameters[:abridged]
         AbridgedResultsParser.new(body).parse
       else
         Hash.from_xml(body)
