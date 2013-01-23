@@ -125,8 +125,20 @@ END_DATA
     should "parse the data correctly" do
       assert_equal 6, @parsed_result[:autnresponse][:responsedata][:hit].count
     end
+  end
 
+  context "a idol query with various options set" do
+    setup do
+      @query = Idol::Query.new("http://autonomy.moxiesoft.com")
+      @query.text("test").print_fields("id,summary").combine("simple").max_results(500)
+    end
 
+    should "properly set the options" do
+      assert_equal "test", @query.to_hash[:text]
+      assert_equal "id,summary", @query.to_hash[:print_fields]
+      assert_equal "simple", @query.to_hash[:combine]
+      assert_equal 500, @query.to_hash[:max_results]
+    end
   end
 
 end
