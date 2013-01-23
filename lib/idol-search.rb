@@ -69,7 +69,7 @@ module Idol
       end
 
       @parameters.each do |name, values|
-        post_fields << Curl::PostField.content(name.gsub("_", ""), values)
+        post_fields << Curl::PostField.content(name.to_s.gsub("_", ""), values)
       end
       post_fields
     end
