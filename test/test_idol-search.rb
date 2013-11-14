@@ -141,4 +141,18 @@ END_DATA
     end
   end
 
+  context "a configured idol with a default query" do
+    setup do
+      Idol.configure do
+        self.url = "http://autonomy.moxiesoft.com"
+      end
+      @query = Idol::Query.new.text("test")
+    end
+
+    should "properly set the url" do
+      assert_equal "test", @query.to_hash[:text]
+      assert_equal "http://autonomy.moxiesoft.com", @query.url
+    end
+  end
+
 end
