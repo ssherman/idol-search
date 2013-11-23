@@ -1,6 +1,7 @@
 source "http://rubygems.org"
-gem "curb", "~> 0.8"
 gem "nokogiri", "~> 1.5"
+gem "faraday", "~> 0.8.8"
+gem "em-synchrony", "~> 1.0.3"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
