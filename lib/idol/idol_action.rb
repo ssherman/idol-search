@@ -1,5 +1,4 @@
 require 'faraday'
-require 'eventmachine'
 module Idol
   module IdolAction
     attr_accessor :url, :filters, :parameters, :raw_results
@@ -37,17 +36,21 @@ module Idol
       @filters
     end
 
+    def adapter(adapter)
+      @adapter = adapter
+      self
+    end
+
     def execute
       return @results if @results
 
-      adapter = EM.reactor_running? ? :em_synchrony : Faraday.default_adapter
-
+      adapter = @adapter || Idol.config.adapter || Faraday.default_adapter
       response = Faraday.new(:url => "#{@url}/?action=#{action}") do |r|
         generate_post_fields(r.params)
         r.adapter adapter
       end.post
-      status = data.status
-      body = data.body
+      status = response.status
+      body = response.body
 
       return body if @raw_results
       @results = if @parameters[:abridged]

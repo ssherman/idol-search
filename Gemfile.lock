@@ -6,9 +6,6 @@ GEM
       multi_json (~> 1.0)
     bourne (1.1.2)
       mocha (= 0.10.5)
-    em-synchrony (1.0.3)
-      eventmachine (>= 1.0.0.beta.1)
-    eventmachine (1.0.3)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
     git (1.2.5)
@@ -45,7 +42,6 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
-  em-synchrony (~> 1.0.3)
   faraday (~> 0.8.8)
   jeweler (~> 1.8.4)
   nokogiri (~> 1.5)
