@@ -14,8 +14,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "idol-search"
-  gem.homepage = "http://github.com/ssherman/idol-search"
+  gem.name = "moxie-idol-search"
+  gem.homepage = "http://github.com/moxiesoft/idol-search"
   gem.license = "MIT"
   gem.summary = %Q{ruby client for autonomy idol search}
   gem.description = %Q{ruby client for autonomy idol search}
@@ -42,4 +42,12 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "idol-search #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+Rake::Task["release"].clear
+desc "Release a gem to gemfury"
+task :release => [:clean, :build] do
+  version = File.read('VERSION')
+  pkg_name = "moxie-idol-search-#{version}.gem"
+  puts `fury push pkg/#{pkg_name}`
 end

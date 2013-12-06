@@ -1,14 +1,15 @@
 require_relative 'hash_from_xml'
-require_relative 'abridged_results_parser'
 require_relative 'filters'
 
 module Idol
   autoload :Config, 'idol/config'
   autoload :IdolAction, 'idol/idol_action'
+  autoload :Parser, 'idol/parser'
   autoload :Query, 'idol/query'
   autoload :Suggest, 'idol/suggest'
   autoload :SuggestOnText, 'idol/suggest_on_text'
   autoload :ProfileUser, 'idol/profile_user'
+  autoload :Error, 'idol/exceptions'
 
   def self.configure(&block)
     (@config ||= Config.new).instance_eval &block
