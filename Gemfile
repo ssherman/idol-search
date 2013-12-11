@@ -1,6 +1,7 @@
 source "http://rubygems.org"
-gem "curb", "~> 0.8"
 gem "nokogiri", "~> 1.5"
+gem "faraday", "~> 0.8.8"
+
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
@@ -10,4 +11,5 @@ group :development do
   gem "bundler"
   gem "jeweler", "~> 1.8.4"
   gem "simplecov"
+  gem "fury"
 end
