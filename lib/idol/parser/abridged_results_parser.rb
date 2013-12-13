@@ -11,7 +11,10 @@ module Idol
         autoparsed_result = Hash.from_xml(@result)
         xml = Nokogiri::XML(@result)
 
-        autn_ids = xml.xpath('//autn:abrid').first.content.split(",")
+        autn_ids = xml.xpath('//autn:abrid')
+        unless autn_ids.empty?
+          autn_ids = autn_ids.first.content.split(",")
+        end
         weights = xml.xpath('//autn:abrweight')
         unless weights.empty?
           weights = weights[0].content.split(',').map{|w|w.to_i}
