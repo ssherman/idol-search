@@ -54,7 +54,7 @@ module Idol
         autn_ids.each do |id|
           result = {:id => id, :weight => weights[index], :content => {}}
           fields.each do |field|
-            section, name = field[:name].split("/")
+            section, name = field[:name].split("/").map(&:to_sym)
             unless result[:content].has_key?(section)
               result[:content][section] = {}
             end

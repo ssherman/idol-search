@@ -161,9 +161,9 @@ END_DATA
       assert_equal 12, hits.size, "Wrong number of results returned"
       hits.each do |hit|
         if hit[:id] == '498430'
-          assert_equal ['bar', 'foo'], hit[:content]['DOCUMENT']['TAGS'], "Wrong tags for: #{hit[:id]}"
+          assert_equal ['bar', 'foo'], hit[:content][:DOCUMENT][:TAGS], "Wrong tags for: #{hit[:id]}"
         else
-          assert_equal([], hit[:content]['DOCUMENT']['TAGS'], "Wrong tags for: #{hit[:id]}")
+          assert_equal([], hit[:content][:DOCUMENT][:TAGS], "Wrong tags for: #{hit[:id]}")
         end
       end
     end
