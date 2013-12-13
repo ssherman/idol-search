@@ -245,7 +245,7 @@ END_DATA
     end
     should "set MaxResults and Start correctly" do
       assert_equal 11, @query_hash[:start], "Wrong Start position"
-      assert_equal 20, @query_hash[:max_results], "Wrong MaxResults"
+      assert_equal 21, @query_hash[:max_results], "Wrong MaxResults"
     end
   end
 
