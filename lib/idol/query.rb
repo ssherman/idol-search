@@ -148,7 +148,7 @@ module Idol
     end
 
     def summary?
-      parameters.has_key(:summary) || parameters[:summary] != 'Off'
+      parameters.has_key?(:summary) || parameters[:summary] != 'Off'
     end
 
     def num_hits
@@ -156,7 +156,24 @@ module Idol
     end
 
     def hits
-      execute[:autnresponse][:responsedata][:hit]
+      h = execute[:autnresponse][:responsedata][:hit]
+      h = if h.nil?
+        []
+      elsif !h.is_a?(Array)
+        [h]
+      else
+        h
+      end
+
+      if h.size > @per_page
+        h = h[0..(@per_page - 1)]
+      end
+      h
+    end
+
+    def more?
+      h = execute[:autnresponse][:responsedata][:hit]
+      h && h.is_a?(Array) && h.size > @per_page
     end
 
     protected
@@ -172,7 +189,7 @@ module Idol
     private
 
     def set_paging
-      start((@page - 1) * @per_page + 1).max_results(@page * @per_page)
+      start((@page - 1) * @per_page + 1).max_results(@page * @per_page + 1)
     end
   end
 end

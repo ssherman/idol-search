@@ -50,7 +50,7 @@ module Idol
 
     private
     def escape(value)
-      value.gsub("&", "%26").gsub("\\", "%5C").gsub("%", "%25").gsub("{", "%257B").gsub("{", "%257D")
+      value.to_s.gsub("&", "%26").gsub("\\", "%5C").gsub("%", "%25").gsub("{", "%257B").gsub("{", "%257D")
     end
   end
 

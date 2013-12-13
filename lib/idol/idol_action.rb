@@ -44,6 +44,7 @@ module Idol
 
     def dup
       action = self.class.new(url, parameters.dup)
+      action.adapter(@adapter)
       action.filters = filters.dup
       action
     end
