@@ -135,22 +135,6 @@ module Idol
       self
     end
 
-    def abridged
-      parameters[:abridged] = true
-      self.parser = Parser::AbridgedResultsParser
-      self
-    end
-
-    def distinct
-      parameters[:abridged] = true
-      self.parser = Parser::DistinctParser
-      self
-    end
-
-    def summary?
-      parameters.has_key?(:summary) || parameters[:summary] != 'Off'
-    end
-
     protected
 
     def process_results(body)

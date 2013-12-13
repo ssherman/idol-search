@@ -42,6 +42,18 @@ module Idol
       self
     end
 
+    def abridged
+      parameters[:abridged] = true
+      self.parser = Parser::AbridgedResultsParser
+      self
+    end
+
+    def distinct
+      parameters[:abridged] = true
+      self.parser = Parser::DistinctParser
+      self
+    end
+
     def dup
       action = self.class.new(url, parameters.dup)
       action.adapter(@adapter)
@@ -104,10 +116,12 @@ module Idol
     end
 
     def num_hits
+      return 0 if error?
       execute[:autnresponse][:responsedata][:numhits]
     end
 
     def hits
+      return [] if error?
       h = execute[:autnresponse][:responsedata][:hit]
       h = if h.nil?
         []
@@ -126,6 +140,10 @@ module Idol
     def more?
       h = execute[:autnresponse][:responsedata][:hit]
       h && h.is_a?(Array) && h.size > @per_page
+    end
+
+    def summary?
+      parameters.has_key?(:summary) || parameters[:summary] != 'Off'
     end
 
     protected

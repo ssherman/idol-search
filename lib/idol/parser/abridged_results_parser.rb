@@ -12,7 +12,10 @@ module Idol
         xml = Nokogiri::XML(@result)
 
         autn_ids = xml.xpath('//autn:abrid').first.content.split(",")
-        weights = xml.xpath('//autn:abrweight')[0].content.split(',').map{|w|w.to_i}
+        weights = xml.xpath('//autn:abrweight')
+        unless weights.empty?
+          weights = weights[0].content.split(',').map{|w|w.to_i}
+        end
 
         # parse out the field meta data
         xml.xpath('//autn:abrfield').each do |field_data|
