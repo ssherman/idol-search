@@ -176,7 +176,7 @@ END_DATA
 
     should "return the tags with counts" do
       assert_equal 12, @result[:num_hits], "Wrong number of hits returned"
-      tags = @result['DOCUMENT']['TAGS']
+      tags = @result[:DOCUMENT][:TAGS]
       assert_equal 2, tags.size, "Wrong number of tags returned"
       assert_equal 'bar', tags[0].first, "Wrong tag returned first"
       assert_equal 1, tags[0].last, "Wrong count for tag bar"

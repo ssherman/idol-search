@@ -131,7 +131,7 @@ module Idol
         h
       end
 
-      if h.size > @per_page
+      if @per_page && h.size > @per_page
         h = h[0..(@per_page - 1)]
       end
       h

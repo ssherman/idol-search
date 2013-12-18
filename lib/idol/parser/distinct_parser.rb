@@ -27,7 +27,7 @@ module Idol
       private
 
       def parse_field(field)
-        names = field.xpath('autn:abrname/text()').text.split('/')
+        names = field.xpath('autn:abrname/text()').text.split('/').map(&:to_sym)
         lengths = field.xpath('autn:abrlength/text()').text.split(',').map(&:to_i)
         bytes = field.xpath('autn:abrvalue/text()').text.bytes.to_a
 
