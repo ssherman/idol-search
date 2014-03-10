@@ -283,4 +283,30 @@ END_DATA
     end
   end
 
+  context "An idol encryptor with default keys" do
+    setup do
+      @encryptor = Idol::Encryptor.new(1861290038,
+        2612094982,
+        2875677899,
+        4119137992)
+    end
+
+    should "decrypt string correctly" do
+      assert_equal "1234567890,0987654321,5678901234,4321098765", @encryptor.decrypt("NDR8+h9FzucD9g4Pwlo9c/N9mtnlEUcDceeT1cttc74wJWABfrdlYOyIB07o+/U=")
+    end
+  end
+
+  context "An idol encryptor with loaded key" do
+    setup do
+      Idol.configure do
+        self.encrypted_keys = "NDR8+h9FzucD9g4Pwlo9c/N9mtnlEUcDceeT1cttc74wJWABfrdlYOyIB07o+/U="
+      end
+      @encryptor = Idol::Encryptor.new
+    end
+
+    should "encrypt string correctly" do
+      assert_equal 'NTJ8BrBZ+QVBNsY4u0CQ89VVMiplteLFFRwNQjWjPZrQBF0QNJD3i6zIy7bO+1ZgMYcr067h/w==', @encryptor.encrypt("action=Query&text=test&combine=simple")
+    end
+  end
+
 end
