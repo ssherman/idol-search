@@ -97,10 +97,15 @@ module Idol
 
       adapter = @adapter || Idol.config.adapter || Faraday.default_adapter
       Idol.config.logger.debug { "Executing query #{to_url} with adapter: #{adapter}" } if Idol.config.logger
-      response = Faraday.new(:url => "#{@url}/?action=#{action}") do |r|
-        generate_post_fields(r.params)
+      
+
+      response = Faraday.new(:url => "#{@url}") do |r|
+        generate_fields(r.params)
+        if Idol.config.encrypted_keys
+          encrypt r.params
+        end
         r.adapter adapter
-      end.post
+      end.get
       status = response.status
       body = response.body
 
@@ -159,7 +164,7 @@ module Idol
     end
 
     private
-    def generate_post_fields(post_fields)
+    def generate_fields(post_fields)
       if @filters.count > 0
         post_fields["fieldtext"] = @filters.to_idol_syntax
       end
@@ -167,6 +172,12 @@ module Idol
       @parameters.each do |name, values|
         post_fields[name.to_s.gsub("_", "")] = values
       end
+    end
+
+    def encrypt(params)
+      string = "action=#{action}&#{params.to_query}"
+      data = Encryptor.new.encrypt(string)
+      params.replace(Action: 'Encrypted', Data: data)
     end
 
     def add_field(filter, field, value)

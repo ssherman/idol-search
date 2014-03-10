@@ -10,6 +10,7 @@ module Idol
   autoload :SuggestOnText, 'idol/suggest_on_text'
   autoload :ProfileUser, 'idol/profile_user'
   autoload :Error, 'idol/exceptions'
+  autoload :Encryptor, 'idol/encryptor'
 
   def self.configure(&block)
     (@config ||= Config.new).instance_eval &block
