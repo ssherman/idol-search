@@ -9,6 +9,9 @@ module Idol
   autoload :Suggest, 'idol/suggest'
   autoload :SuggestOnText, 'idol/suggest_on_text'
   autoload :ProfileUser, 'idol/profile_user'
+  autoload :GetStatus, 'idol/get_status'
+  autoload :IndexerGetStatus, 'idol/indexer_get_status'
+  autoload :List, 'idol/list'
   autoload :Error, 'idol/exceptions'
   autoload :Encryptor, 'idol/encryptor'
 
