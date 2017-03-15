@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "idol-search"
-  s.version = "0.7.0"
+  s.version = "0.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Shane Sherman"]
-  s.date = "2013-10-16"
+  s.authors = ["Shane Sherman", "Jonathan Bell"]
+  s.date = "2017-03-15"
   s.description = "ruby client for autonomy idol search"
   s.email = "shane.sherman@gmail.com"
   s.extra_rdoc_files = [
