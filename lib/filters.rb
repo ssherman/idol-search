@@ -50,15 +50,15 @@ module Idol
 
     private
     def escape(value)
-      value.gsub("&", "%26").gsub("\\", "%5C").gsub("%", "%25").gsub("{", "%257B").gsub("{", "%257D")
+      value.to_s.gsub("&", "%26").gsub("\\", "%5C").gsub("%", "%25").gsub("{", "%257B").gsub("{", "%257D")
     end
   end
 
   class FieldTextFilterCollection
     include Enumerable
-    def initialize
-      @filters = []
-      @conjunctions = []
+    def initialize(filters=[], conjunctions=[])
+      @filters = filters
+      @conjunctions = conjunctions
     end
 
     def <<(filter)
@@ -73,6 +73,13 @@ module Idol
 
     def each(&block)
       @filters.each(&block)
+    end
+
+    def dup
+      filters = FieldTextFilterCollection.new
+      filters.instance_variable_set(:"@filters", @filters.dup)
+      filters.instance_variable_set(:"@conjunctions", @conjunctions.dup)
+      filters
     end
 
     def to_idol_syntax
